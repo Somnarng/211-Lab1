@@ -11,7 +11,12 @@ public class Movement : MonoBehaviour
 	public float MouseSensitivity;
 	public Transform CamTransform;
 	public float verticalSpeed;
-
+	public AudioClip[] sounds;
+	public AudioSource source;
+	[Range(0.1f,0.5f)]
+	public float volumeChangeMultiplier = 0.2f;
+	[Range(0.1f, 0.5f)]
+	public float pitchChangeMultiplier = 0.2f;
 	private float camRotation = 0f;
 
 	private void Start()
@@ -43,5 +48,19 @@ public class Movement : MonoBehaviour
 		transform.rotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0f, mouseInputX));
 
 
+	}
+    private void FixedUpdate()
+    {
+		if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
+		{
+
+        }
+	}
+    public void RandomizeFootstep()
+    {
+		source.clip = sounds[Random.Range(0, sounds.Length)];
+		source.volume = Random.Range(1 - volumeChangeMultiplier, 1);
+		source.pitch = Random.Range(1 - pitchChangeMultiplier, 1 + pitchChangeMultiplier);
+		source.PlayOneShot(source.clip);//code from : https://www.youtube.com/watch?v=lqyzGntF5Hw //
 	}
 }
