@@ -8,6 +8,8 @@ public class NPCLookAt : MonoBehaviour
     [SerializeField]
     private int speed = 5;
     private bool DialogueIN = false;
+    [SerializeField]
+    public Quaternion defRot;
     void Update()
     {
         if (DialogueIN == true)
@@ -18,7 +20,7 @@ public class NPCLookAt : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * speed);
         }
         else{
-            var defRotation = Quaternion.Euler(0, 180, 0);
+            var defRotation = defRot;
             transform.rotation = Quaternion.Slerp(transform.rotation, defRotation, Time.deltaTime * speed);
         }
     }

@@ -8,7 +8,7 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: garbage_bag_full
-    second: {fileID: 2800000, guid: 5d924dce5e816384cbe9bb3b98b862a3, type: 3}
+    second: {fileID: 2800000, guid: 8e09aaf5186b3684298c2dfd66cc5155, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
