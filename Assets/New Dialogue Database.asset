@@ -5540,7 +5540,8 @@ MonoBehaviour:
         destinationDialogueID: 2
         isConnector: 0
         priority: 2
-      conditionsString: Variable["Phone"] == false
+      conditionsString: Variable["Phone"] == false and (Variable["Generator_On"]
+        == false)
       userScript: 
       onExecute:
         m_PersistentCalls:

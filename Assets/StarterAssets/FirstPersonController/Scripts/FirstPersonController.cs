@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Cinemachine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
@@ -61,6 +62,7 @@ namespace StarterAssets
 		public float TopClamp = 90.0f;
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
+		public CinemachineVirtualCamera cam;
 
 		// cinemachine
 		private float _cinemachineTargetPitch;
@@ -75,7 +77,7 @@ namespace StarterAssets
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
 
-	
+
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 		private PlayerInput _playerInput;
 #endif
@@ -89,11 +91,11 @@ namespace StarterAssets
 		{
 			get
 			{
-				#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 				return _playerInput.currentControlScheme == "KeyboardMouse";
-				#else
+#else
 				return false;
-				#endif
+#endif
 			}
 		}
 
@@ -132,6 +134,7 @@ namespace StarterAssets
 		private void LateUpdate()
 		{
 			CameraRotation();
+			SprintFOV();
 		}
 
 		private void GroundedCheck()
@@ -148,7 +151,7 @@ namespace StarterAssets
 			{
 				//Don't multiply mouse input by Time.deltaTime
 				float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
-				
+
 				_cinemachineTargetPitch += _input.look.y * RotationSpeed * deltaTimeMultiplier;
 				_rotationVelocity = _input.look.x * RotationSpeed * deltaTimeMultiplier;
 
@@ -277,19 +280,36 @@ namespace StarterAssets
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
 		}
 		private void Footsteps()
-        {
+		{
 			if (!_controller.isGrounded) return;
-			if (_input.move == Vector2.zero ) return;
+			if (_input.move == Vector2.zero) return;
 
 			footstepTimer -= Time.deltaTime;
 			if (footstepTimer <= 0)
-            {
+			{
 				source.clip = sounds[Random.Range(0, sounds.Length)];
 				source.volume = Random.Range(1 - volumeChangeMultiplier, 1);
 				source.pitch = Random.Range(1 - pitchChangeMultiplier, 1 + pitchChangeMultiplier);
 				source.PlayOneShot(source.clip);//code from : https://www.youtube.com/watch?v=lqyzGntF5Hw //
 				footstepTimer = GetCurrentOffset;
 			}
-        }
+		}
+		private void SprintFOV()
+		{
+			if (_input.sprint)
+			{
+				if (cam.m_Lens.FieldOfView < 50)
+				{
+					cam.m_Lens.FieldOfView = Mathf.Lerp(cam.m_Lens.FieldOfView, 50, 10 * Time.deltaTime);
+				}
+			}
+			else
+			{
+				if (cam.m_Lens.FieldOfView > 40)
+				{
+					cam.m_Lens.FieldOfView = Mathf.Lerp(cam.m_Lens.FieldOfView, 40, 10 * Time.deltaTime);
+				}
+			}
+		}
 	}
 }
